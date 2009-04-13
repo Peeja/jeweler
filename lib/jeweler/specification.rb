@@ -28,6 +28,7 @@ class Jeweler
       Dir.chdir(base_dir) do
         if blank?(files)
           self.files = FileList["[A-Z]*.*", "{bin,examples,generators,lib,rails,spec,test}/**/*", 'Rakefile', 'LICENSE*']
+          self.files -= `git ls-files --others --exclude-standard --ignored 2>/dev/null`.split("\n")
         end
 
         if blank?(test_files)

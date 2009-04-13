@@ -4,6 +4,8 @@ class TestSpecification < Test::Unit::TestCase
   def setup
     remove_tmpdir!
     FileUtils.cp_r fixture_dir, tmp_dir
+    system "cd #{tmp_dir} && git init >/dev/null 2>&1"
+    FileUtils.mv File.join(tmp_dir, '.gitignore.tobe'), File.join(tmp_dir, '.gitignore')
 
 
     @spec = Gem::Specification.new
@@ -17,7 +19,7 @@ class TestSpecification < Test::Unit::TestCase
 
   context "Gem::Specification with Jeweler monkey-patches" do
     context "when setting defaults" do
-      should "should populate `files'" do
+      should "should populate `files' with non-gitignored files" do
         assert_equal %w{Rakefile VERSION.yml bin/foo_the_ultimate_bin lib/foo_the_ultimate_lib.rb }, @spec.files.sort
       end
 
